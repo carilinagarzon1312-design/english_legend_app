@@ -1,0 +1,62 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+.center {
+  text-align: center;
+  margin-top: 100px;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+
+button {
+  background: #38bdf8;
+  border: none;
+  padding: 15px 25px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+button:hover {
+  background: #0ea5e9;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+  padding: 20px;
+}
+
+.card {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: center;
+}
+/* Estilos para los nuevos botones de aprendizaje */
+button[onclick*="mostrarHerramientasEstudio"], 
+button[onclick*="iniciarExamenA1"] {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.8em;
+    transition: transform 0.2s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
