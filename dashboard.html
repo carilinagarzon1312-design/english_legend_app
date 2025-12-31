@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>English Legend Academy</title>
+    <style>
+        body { font-family: sans-serif; background: #0f172a; color: white; padding: 20px; }
+        .container { max-width: 900px; margin: auto; }
+        #levels { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-top: 20px; }
+        .card { background: #1e293b; padding: 15px; border-radius: 10px; text-align: center; }
+        @keyframes victoryJump {
+    0% { transform: scale(0.5); opacity: 0; }
+    60% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.level-card:active {
+    transform: scale(0.9);
+}
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-15px); }
+    40% { transform: translateX(15px); }
+    60% { transform: translateX(-10px); }
+    80% { transform: translateX(10px); }
+}
+
+button:hover {
+    transform: translateY(-3px) scale(1.05);
+    filter: brightness(1.2);
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align:center; color:#3b82f6;">🏆 ENGLISH LEGEND</h1>
+        <div id="config-area"></div>
+        <div id="levels"></div>
+        <div id="area-estudio" style="margin-top:20px;"></div>
+    </div>
+    <script src="js/lessons-a1minus.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
