@@ -41,5 +41,30 @@ button:hover {
     <script src="js/lessons-a1minus.js"></script>
     <script src="js/app.js"></script>
 </body>
-
 </html>
+<div id="user-panel" class="user-panel">
+    <div class="user-info" id="login-section">
+        <input type="text" id="username-input" placeholder="Tu nombre de usuario">
+        <button onclick="createUser()">Crear Usuario</button>
+    </div>
+    
+    <div class="user-stats" id="stats-section" style="display: none;">
+        <h3 id="display-username">Bienvenido</h3>
+        <div class="progress-container">
+            <div class="progress-bar" id="main-progress-bar">0%</div>
+        </div>
+        <p id="progress-text">Bloques completados: 0 / 40</p>
+    </div>
+</div>
+
+<button onclick="showRanking()" class="btn-ranking">🏆 Ver Top Mundial</button>
+
+<div id="ranking-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeRanking()">&times;</span>
+        <h2>Top Mundial (Simulado)</h2>
+        <div id="ranking-list"></div>
+    </div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
