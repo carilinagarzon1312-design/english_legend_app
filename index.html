@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Legend | The 100 Blocks Saga</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;900&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --bg: #020617; --card: #0f172a; --primary: #3b82f6; 
+            --gold: #fbbf24; --success: #22c55e; --danger: #f43f5e; --text: #f8fafc; 
+        }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Roboto', sans-serif; margin: 0; padding-bottom: 50px; overflow-x: hidden; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; }
+        
+        /* Navegación de Rangos Legendarios */
+        .rank-nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin: 15px 0; }
+        .rank-btn { padding: 10px 2px; font-size: 0.65rem; border: 1px solid #1e293b; background: #0f172a; color: #64748b; border-radius: 8px; font-weight: 900; }
+        .rank-btn.active { border-color: var(--primary); color: white; background: rgba(59,130,246,0.2); box-shadow: 0 0 15px var(--primary); }
+
+        /* Pantallas de Interfaz */
+        .screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; flex-direction: column; align-items: center; justify-content: center; padding: 25px; box-sizing: border-box; background: var(--bg); overflow-y: auto; }
+        
+        /* Selectores de Configuración */
+        .selector-row { display: flex; justify-content: space-around; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; margin: 10px 0; width: 100%; }
+        .opt { font-size: 0.7rem; padding: 8px 12px; border-radius: 6px; cursor: pointer; background: #1e293b; border: 1px solid transparent; }
+        .opt.selected { border-color: var(--gold); color: var(--gold); background: rgba(251, 191, 36, 0.1); }
+
+        /* Grid de 100 Bloques */
+        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 20px; }
+        .block-card { background: #1e293b; padding: 15px 5px; border-radius: 10px; border-bottom: 3px solid #0f172a; cursor: pointer; transition: 0.2s; font-size: 0.75rem; font-weight: 900; }
+        .block-card.done { border-color: var(--success); color: var(--success); }
+
+        /* Botones y Tips */
+        .exam-btn { background: #1e293b; color: white; border: 1px solid #334155; padding: 15px; border-radius: 12px; font-size: 1rem; cursor: pointer; width: 100%; margin: 5px 0; font-weight: 700; transition: 0.2s; }
+        .tip-box { background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--primary); padding: 15px; border-radius: 0 10px 10px 0; margin: 15px 0; text-align: left; font-size: 0.9rem; width: 100%; max-width: 400px; }
+        
+        .vocab-row { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #1e293b; width: 100%; max-width: 400px; }
+    </style>
+</head>
+<body>
+
+<div id="prep-screen" class="screen">
+    <h2 id="prep-title" style="font-family:'Orbitron'; color:var(--primary); margin:0;"></h2>
+    
+    <div style="width:100%; max-width:400px; margin: 20px 0;">
+        <p style="font-size:0.8rem; color:var(--gold); margin:5px 0;">ACENTO DE ENTRENAMIENTO</p>
+        <div class="selector-row">
+            <span class="opt selected" onclick="selectOpt(this, 'accent')">🇺🇸 USA</span>
+            <span class="opt" onclick="selectOpt(this, 'accent')">🇬🇧 UK</span>
+            <span class="opt" onclick="selectOpt(this, 'accent')">🇦🇺 AUS</span>
+            <span class="opt" onclick="selectOpt(this, 'accent')">🇨🇦 CAN</span>
+        </div>
+        
+        <p style="font-size:0.8rem; color:var(--gold); margin:15px 0 5px;">CERTIFICACIÓN OBJETIVO</p>
+        <div class="selector-row">
+            <span class="opt selected" onclick="selectOpt(this, 'exam')">TOEFL</span>
+            <span class="opt" onclick="selectOpt(this, 'exam')">IELTS</span>
+            <span class="opt" onclick="selectOpt(this, 'exam')">CAMBRIDGE</span>
+        </div>
+    </div>
+
+    <div id="vocab-display"></div>
+    
+    <button class="exam-btn" style="background:var(--success); color:white; margin-top:20px;" onclick="startExam()">INICIAR EXAMEN DE BLOQUE</button>
+    <button onclick="closeAll()" style="background:none; border:none; color:#64748b; margin-top:10px; cursor:pointer;">CERRAR</button>
+</div>
+
+<div id="exam-screen" class="screen">
+    <div id="exam-header-tip" class="tip-box" style="margin-top:0;"></div>
+    <h3 id="q-text" style="font-size:1.5rem; margin-bottom:30px;"></h3>
+    <div id="options-grid" style="width:100%; max-width:400px;"></div>
+</div>
+
+<div id="v-screen" class="screen" style="background: radial-gradient(circle, #1e293b 0%, #020617 100%);">
+    <div style="font-size: 5rem;">🏆</div>
+    <h1 style="font-family:'Orbitron'; color:var(--gold);">¡BLOQUE DOMINADO!</h1>
+    <div id="v-resumen" class="tip-box" style="border-color: var(--success); color: #fff;"></div>
+    <button class="exam-btn" style="background:var(--gold); color:black;" onclick="closeAll()">SIGUIENTE MISIÓN</button>
+</div>
+
+<div id="d-screen" class="screen" style="background: radial-gradient(circle, #450a0a 0%, #020617 100%);">
+    <div style="font-size: 5rem;">🛡️</div>
+    <h1 style="font-family:'Orbitron'; color:var(--danger);">HAS CAÍDO</h1>
+    <div id="d-tip" class="tip-box" style="border-color: var(--danger); background: rgba(244, 63, 94, 0.1);"></div>
+    <button class="exam-btn" style="background:white; color:black;" onclick="closeAll()">REINTENTAR BLOQUE</button>
+</div>
+
+<div class="container">
+    <h1 style="font-family:'Orbitron'; color:var(--primary); margin-bottom:0;">ENGLISH LEGEND</h1>
+    
+    <div class="rank-nav">
+        <div class="rank-btn active">-A1</div>
+        <div class="rank-btn">A1</div><div class="rank-btn">A2</div><div class="rank-btn">B1</div>
+        <div class="rank-btn">B2</div><div class="rank-btn">C1</div><div class="rank-btn">C2</div><div class="rank-btn">C3</div>
+    </div>
+
+    <div style="background: #1e293b; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #334155;">
+        <div style="background:#0f172a; height:15px; border-radius:10px; overflow:hidden;">
+            <div id="progress-fill" style="width:0%; height:100%; background:linear-gradient(90deg, var(--primary), var(--gold)); transition: 1s;"></div>
+        </div>
+        <p id="progress-text" style="font-size: 0.8rem; margin: 10px 0 0; font-weight: bold;">0/100 BLOQUES CONQUISTADOS</p>
+    </div>
+
+    <div id="block-grid" class="grid"></div>
+</div>
+
+<script>
+    // BASE DE DATOS EXPANDIDA (100 PALABRAS)
+    const baseWords = ["Apple", "Bread", "Car", "Dog", "Eat", "Fish", "Girl", "House", "Ice", "Juice", "King", "Lamp", "Moon", "Night", "Orange", "Paper", "Queen", "Rain", "Sun", "Tree", "Uncle", "Voice", "Water", "Xylophone", "Yellow", "Zebra", "Table", "Chair", "Window", "Door", "Smart", "Happy", "Cold", "Warm", "Big", "Small", "Fast", "Slow", "High", "Low", "Always", "Never", "Sometimes", "Often", "Early", "Late", "Near", "Far", "Up", "Down", "Love", "Hate", "Think", "Know", "Believe", "Doubt", "Work", "Rest", "Build", "Destroy", "Mountain", "River", "Ocean", "Desert", "Forest", "City", "Village", "Street", "Road", "Bridge", "Computer", "Phone", "Key", "Lock", "Clock", "Watch", "Book", "Pen", "Bag", "Money", "Health", "Strength", "Fear", "Courage", "Silence", "Noise", "Peace", "War", "Truth", "Lie", "Simple", "Complex", "Clear", "Dark", "Young", "Old", "Rich", "Poor", "Easy", "Hard"];
+    const baseSpanish = ["Manzana", "Pan", "Carro", "Perro", "Comer", "Pescado", "Chica", "Casa", "Hielo", "Jugo", "Rey", "Lámpara", "Luna", "Noche", "Naranja", "Papel", "Reina", "Lluvia", "Sol", "Árbol", "Tío", "Voz", "Agua", "Xilófono", "Amarillo", "Cebra", "Mesa", "Silla", "Ventana", "Puerta", "Inteligente", "Feliz", "Frío", "Cálido", "Grande", "Pequeño", "Rápido", "Lento", "Alto", "Bajo", "Siempre", "Nunca", "A veces", "A menudo", "Temprano", "Tarde", "Cerca", "Lejos", "Arriba", "Abajo", "Amar", "Odiar", "Pensar", "Saber", "Creer", "Dudar", "Trabajar", "Descansar", "Construir", "Destruir", "Montaña", "Río", "Océano", "Desierto", "Bosque", "Ciudad", "Pueblo", "Calle", "Camino", "Puente", "Computadora", "Teléfono", "Llave", "Cerradura", "Reloj", "Reloj de pulsera", "Libro", "Bolígrafo", "Bolso", "Dinero", "Salud", "Fuerza", "Miedo", "Coraje", "Silencio", "Ruido", "Paz", "Guerra", "Verdad", "Mentira", "Simple", "Complex", "Claro", "Oscuro", "Joven", "Viejo", "Rico", "Pobre", "Fácil", "Difícil"];
+
+    const EXAM_TIPS = {
+        TOEFL: "TOEFL Tip: Enfócate en el vocabulario académico y la comprensión rápida.",
+        IELTS: "IELTS Tip: La precisión es clave. Identifica el contexto de la palabra.",
+        CAMBRIDGE: "Cambridge Tip: Los modismos y el uso natural son lo más valorado."
+    };
+
+    let userData = JSON.parse(localStorage.getItem('engLegendFinal')) || { completed: [] };
+    let currentBlockId = null;
+    let currentQ = 0;
+    let currentVocab = [];
+    let selectedExam = "TOEFL";
+
+    function init() {
+        const grid = document.getElementById('block-grid');
+        grid.innerHTML = "";
+        for(let i=1; i<=100; i++) {
+            const isDone = userData.completed.includes(i);
+            grid.innerHTML += `<div class="block-card ${isDone?'done':''}" onclick="openPrep(${i})">${i}${isDone?'<br>✅':''}</div>`;
+        }
+        updateUI();
+    }
+
+    function selectOpt(el, type) {
+        el.parentElement.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        if(type === 'exam') selectedExam = el.innerText;
+    }
+
+    function openPrep(id) {
+        currentBlockId = id;
+        currentVocab = [];
+        let start = (id - 1) * 10;
+        for(let i=0; i<10; i++) {
+            let idx = (start + i) % baseWords.length;
+            currentVocab.push({ e: baseWords[idx], s: baseSpanish[idx] });
+        }
+        
+        document.getElementById('prep-title').innerText = `BLOQUE ${id}`;
+        document.getElementById('vocab-display').innerHTML = currentVocab.map(v => `
+            <div class="vocab-row"><b>${v.e}</b> <span>${v.s}</span></div>
+        `).join('');
+        document.getElementById('prep-screen').style.display = 'flex';
+    }
+
+    function startExam() {
+        document.getElementById('prep-screen').style.display = 'none';
+        document.getElementById('exam-screen').style.display = 'flex';
+        document.getElementById('exam-header-tip').innerText = EXAM_TIPS[selectedExam];
+        currentQ = 0;
+        showQuestion();
+    }
+
+    function showQuestion() {
+        if(currentQ >= 10) { showVictory(); return; }
+        const q = currentVocab[currentQ];
+        document.getElementById('q-text').innerText = `¿Cómo se dice "${q.s}"?`;
+        
+        let wrong = [];
+        while(wrong.length < 3) {
+            let w = baseWords[Math.floor(Math.random()*baseWords.length)];
+            if(w !== q.e && !wrong.includes(w)) wrong.push(w);
+        }
+        let opts = [q.e, ...wrong].sort(() => Math.random() - 0.5);
+        document.getElementById('options-grid').innerHTML = opts.map(o => `
+            <button class="exam-btn" onclick="checkAns('${o}', '${q.e}')">${o}</button>
+        `).join('');
+    }
+
+    function checkAns(sel, corr) {
+        if(sel === corr) { currentQ++; showQuestion(); }
+        else { showDefeat(corr); }
+    }
+
+    function showVictory() {
+        if(!userData.completed.includes(currentBlockId)) userData.completed.push(currentBlockId);
+        localStorage.setItem('engLegendFinal', JSON.stringify(userData));
+        document.getElementById('exam-screen').style.display = 'none';
+        document.getElementById('v-screen').style.display = 'flex';
+        document.getElementById('v-resumen').innerHTML = `✅ Has conquistado el Bloque ${currentBlockId}.<br>🚀 Tu avance total es del ${userData.completed.length}%.<br>🔥 ¡Faltan ${100-userData.completed.length} para el C3!`;
+    }
+
+    function showDefeat(corr) {
+        document.getElementById('exam-screen').style.display = 'none';
+        document.getElementById('d-screen').style.display = 'flex';
+        document.getElementById('d-tip').innerHTML = `🛡️ Caíste ante la palabra "${corr}".<br>💡 Tip de Resurrección: Repite la palabra en voz alta 3 veces para fijarla en tu memoria.`;
+    }
+
+    function updateUI() {
+        const p = userData.completed.length;
+        document.getElementById('progress-fill').style.width = p + "%";
+        document.getElementById('progress-text').innerText = `${p}/100 BLOQUES CONQUISTADOS`;
+    }
+
+    function closeAll() {
+        document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+        init();
+    }
+
+    init();
+</script>
+</body>
+</html>
